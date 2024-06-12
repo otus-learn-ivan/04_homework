@@ -1,20 +1,20 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.13)
 
 set(PATCH_VERSION "2" CACHE INTERNAL "Patch version")
 set(PROJECT_VESRION 0.1.${PATCH_VERSION})
 
-project(helloworld VERSION ${PROJECT_VESRION})
+project(print_ip_prg VERSION ${PROJECT_VESRION})
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 configure_file(version.h.in version.h)
 
-add_executable(helloworld_cli main.cpp)
+add_executable(print_ip main.cpp)
 add_library(helloworld lib.cpp)
 add_executable(test_version test_version.cpp)
 
-set_target_properties(helloworld_cli helloworld test_version PROPERTIES
-    CXX_STANDARD 14
+set_target_properties(print_ip helloworld test_version PROPERTIES
+    CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
 )
 target_include_directories(helloworld
@@ -25,7 +25,7 @@ set_target_properties(test_version PROPERTIES
     INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR}
 )
 
-target_link_libraries(helloworld_cli PRIVATE
+target_link_libraries(print_ip PRIVATE
     helloworld
 )
 target_link_libraries(test_version
@@ -34,7 +34,7 @@ target_link_libraries(test_version
 )
 
 if (MSVC)
-    target_compile_options(helloworld_cli PRIVATE
+    target_compile_options(print_ip PRIVATE
         /W4
     )
     target_compile_options(helloworld PRIVATE
@@ -44,7 +44,7 @@ if (MSVC)
         /W4
     )
 else ()
-    target_compile_options(helloworld_cli PRIVATE
+    target_compile_options(print_ip PRIVATE
         -Wall -Wextra -pedantic -Werror
     )
     target_compile_options(helloworld PRIVATE
@@ -57,7 +57,7 @@ endif()
 
 
 
-install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
+install(TARGETS print_ip RUNTIME DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 
