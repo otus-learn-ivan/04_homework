@@ -13,6 +13,13 @@
 
 using namespace std;
 
+/**
+    \brief  Функция преоброзования int в строку
+
+    \param [in] format_args  объект, который нужно преоброзовать
+
+    Функция  прербразует входные данные в std::strin 
+*/
 std::string show_to_chars(int format_args)
 {
     std::array<char, 10> str;
@@ -27,6 +34,15 @@ std::string show_to_chars(int format_args)
         }
 }
 
+/**
+    \brief Шаблонная функция парсинга числовых типов
+
+    \tparam T -  Тип переменной
+
+    \param [in] val  объект, который нужно преоброзовать
+
+    Функция  прербразует входные данные в вектор <string> 
+*/
 template <typename T, typename std::enable_if_t<std::is_integral<T>::value, int> = 0>
 vector<string> T_to_vector_int(T v){
     uint8_t* array_int = (uint8_t*)&v+sizeof(T)-1;
@@ -37,6 +53,15 @@ vector<string> T_to_vector_int(T v){
     }
     return out_vector;
 }
+
+/**
+    \brief  Функция парсинга  типа std::string
+
+
+    \param [in] s  объект, который нужно преоброзовать
+
+    Функция  прербразует входные данные в вектор <string> 
+*/
 
 vector<string> T_to_vector_int(string s){
     vector<string> out_vector{};
@@ -70,6 +95,15 @@ struct is_container<T, std::void_t<
     decltype(std::declval<T>().cend())
 >> : std::true_type {};
 
+/**
+    \brief Шаблонная функция парсинга контейнеров типа std::vector and std::list
+
+    \tparam T -  Тип данных сохроняемых в контейнере
+
+    \param [in] val  объект, который нужно преоброзовать
+
+    Функция  прербразует входные данные в вектор <string> 
+*/
 template <typename T, typename std::enable_if_t<is_container<T>::value, int> = 0>
 vector<string>  T_to_vector_int(T val) {
     return parsing_container(val);
@@ -85,6 +119,16 @@ void enumeration_of_elements_tuple(TAction& Action ,const TupleT& tp) {
     enumeration_of_elements_tuple_(Action,tp, std::make_index_sequence<TupSize>{});
 }
 
+
+/**
+    \brief Шаблонная функция парсинга контейнера типа std::tuple
+
+    \tparam T... - Набор типов входящих в данный tuple
+
+    \param [in] val  объект, который нужно преоброзовать
+
+    Функция  прербразует входные данные в вектор <string> 
+*/
 template <typename... T>
 std::enable_if_t<std::is_same<std::tuple<T...>, std::tuple<T...>>::value, vector<string>> T_to_vector_int(std::tuple<T...> val) {
     auto first_elem = std::get<0>(val);
@@ -106,14 +150,11 @@ std::enable_if_t<std::is_same<std::tuple<T...>, std::tuple<T...>>::value, vector
 /**
     \brief Шаблонная функция печати ip адреса
 
-    \tparam T - любой тип, для которого определена оператор суммирования 
-    и оператор присваивания
+    \tparam T - любой тип, для которого определена фукция T_to_vector_int
 
-    \param [in] a Первый объект, который нужно сложить
-    \param [in] b Второй объект, который нужно сложить
+    \param [in] addres  объект, который нужно преоброзовать
 
-    
-    Функция  прербразует входные данные при помощи  функции T_to_vector_int в вектор <int>  и выводит его на печать
+    Функция  прербразует входные данные при помощи  функции T_to_vector_int в вектор <string>  и выводит его на печать
 */
 template <typename T>
 void print_ip(T addres){
